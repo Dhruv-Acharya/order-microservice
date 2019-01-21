@@ -1,7 +1,5 @@
 package com.lelo.ordermicroservice.controller;
 
-
-import com.lelo.ordermicroservice.Utilities.CartList;
 import com.lelo.ordermicroservice.dto.CartDTO;
 import com.lelo.ordermicroservice.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ public class CartController {
     CartService cartService;
 
     @RequestMapping(value = "/{customerId}/{productId}/{merchantId}",method = RequestMethod.POST)
-    public ResponseEntity<Boolean> addQuatity(@PathVariable String customerId, @PathVariable String productId,
+    public ResponseEntity<Boolean> addQuantity(@PathVariable String customerId, @PathVariable String productId,
                                               @PathVariable String merchantId,@RequestBody CartDTO cartDTO)
     {
         cartService.addQuantity(customerId,productId,merchantId,cartDTO.getQuantity());
@@ -33,22 +31,18 @@ public class CartController {
 
     }
 
-    @RequestMapping(value = "/delete/{cartId}",method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> delete(@PathVariable String cartId ){
+    @RequestMapping(value = "/delete/{customerId}",method = RequestMethod.DELETE)
+    public ResponseEntity<Boolean> delete(@PathVariable String customerId ){
 
-        cartService.delete(cartId);
+        cartService.delete(customerId);
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update/{cartId}/{productId}/{merchantId}",method = RequestMethod.PUT)
-    public ResponseEntity<Boolean> updateQuatity(@PathVariable String cartId,@PathVariable String productId,
+    @RequestMapping(value = "/update/{customerId}/{productId}/{merchantId}",method = RequestMethod.PUT)
+    public ResponseEntity<Boolean> updateQuatity(@PathVariable String customerId,@PathVariable String productId,
                                                  @PathVariable String merchantId, @RequestBody CartDTO cartDTO){
-        cartService.updateQuantity(cartId,productId,merchantId,cartDTO.getQuantity());
+        cartService.updateQuantity(customerId,productId,merchantId,cartDTO.getQuantity());
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "get/{cartId}", method = RequestMethod.GET)
-    public CartList getCartList(@PathVariable String cartId){
-        return cartService.getCart(cartId);
-    }
 }

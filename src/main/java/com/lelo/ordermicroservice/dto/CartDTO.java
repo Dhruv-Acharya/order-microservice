@@ -2,20 +2,10 @@ package com.lelo.ordermicroservice.dto;
 
 public class CartDTO {
 
-    private String cartId;
     private String customerId;
     private  String productId;
     private String merchantId;
     private int quantity;
-
-
-    public String getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(String cartId) {
-        this.cartId = cartId;
-    }
 
     public String getCustomerId() {
         return customerId;

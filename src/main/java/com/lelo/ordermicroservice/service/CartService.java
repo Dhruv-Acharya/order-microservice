@@ -1,17 +1,17 @@
 package com.lelo.ordermicroservice.service;
 
-import com.lelo.ordermicroservice.Utilities.CartList;
+import com.lelo.ordermicroservice.dto.CartDTO;
+
+import java.util.List;
 
 public interface CartService {
 
     void addQuantity(String customerId,String productId, String merchantId, int quatity);
 
-    String getByCustomerId(String customerId);
+    List<CartDTO> getByCustomerId(String customerId);
 
-    void delete(String cartId);
+    void delete(String customerId);
 
     void updateQuantity(String customerId,String productId, String merchantId, int quatity);
-
-    CartList getCart(String cartId);
 
 }
