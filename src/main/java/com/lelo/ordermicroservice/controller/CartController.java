@@ -39,7 +39,7 @@ public class CartController {
     }
 
     @RequestMapping(value = "/update/{customerId}/{productId}/{merchantId}",method = RequestMethod.PUT)
-    public ResponseEntity<Boolean> updateQuatity(@PathVariable String customerId,@PathVariable String productId,
+    public ResponseEntity<Boolean> updateQuantity(@PathVariable String customerId,@PathVariable String productId,
                                                  @PathVariable String merchantId, @RequestBody CartDTO cartDTO){
         cartService.updateQuantity(customerId,productId,merchantId,cartDTO.getQuantity());
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
