@@ -12,4 +12,5 @@ import java.util.List;
 public interface OrderRepository extends CrudRepository<Order, String> {
     @Query(value = "SELECT * FROM table_order WHERE table_order.customer_id = :customerId", nativeQuery = true)
     List<Order> getAll(@Param("customerId") String customerId);
+
 }

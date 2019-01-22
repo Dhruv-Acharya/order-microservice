@@ -40,8 +40,6 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItem.setOrder(order);
             orderItemRepository.save(orderItem);
         }
-
-
     }
 
     @Override
