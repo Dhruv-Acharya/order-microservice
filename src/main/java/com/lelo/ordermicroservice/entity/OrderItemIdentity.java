@@ -1,36 +1,31 @@
-package com.lelo.ordermicroservice.entity;
+package com.lelo.ordermicroservice.entity;/* Made by: mehtakaran9 */
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Embeddable
-public class CartIdentity implements Serializable {
-
-    @NotNull
-    private String customerId;
+public class OrderItemIdentity implements Serializable {
     @NotNull
     private String productId;
     @NotNull
     private String merchantId;
 
-    public CartIdentity(){
+    public OrderItemIdentity() {
 
     }
 
-    public CartIdentity(String customerId,String productId,String merchantId)
-    {
-        this.customerId=customerId;
-        this.merchantId=merchantId;
-        this.productId=productId;
+    public OrderItemIdentity(String productId, String merchantId) {
+        this.productId = productId;
+        this.merchantId = merchantId;
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    @Override
+    public String toString() {
+        return "OrderItemIdentity{" +
+                "productId='" + productId + '\'' +
+                ", merchantId='" + merchantId + '\'' +
+                '}';
     }
 
     public String getProductId() {

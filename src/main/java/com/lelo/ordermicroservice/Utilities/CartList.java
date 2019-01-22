@@ -1,6 +1,7 @@
 package com.lelo.ordermicroservice.Utilities;
 
 public class CartList {
+
     private String productName;
     private double price;
     private int quantity;
@@ -9,6 +10,7 @@ public class CartList {
     private String description;
     private String product_id;
     private String merchant_id;
+
 
     public String getProductName() {
         return productName;

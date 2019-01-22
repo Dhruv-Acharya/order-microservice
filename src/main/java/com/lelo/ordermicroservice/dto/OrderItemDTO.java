@@ -1,23 +1,6 @@
-package com.lelo.ordermicroservice.entity;
+package com.lelo.ordermicroservice.dto;
 
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.http.ResponseEntity;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = OrderItems.TABLE_NAME)
-public class OrderItems {
-
-    public static final String TABLE_NAME = "ORDER_ITEMS";
-    private static final String ID_COLUMN = "ID";
-
-
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = OrderItems.ID_COLUMN)
+public class OrderItemDTO {
     private String orderItemsId;
     private String productId;
     private String merchantId;
@@ -25,7 +8,7 @@ public class OrderItems {
     private int quantity;
 
 
-    public ResponseEntity<String> getOrderItemsId() {
+    public String getOrderItemsId() {
         return orderItemsId;
     }
 
