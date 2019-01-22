@@ -1,5 +1,5 @@
 package com.lelo.ordermicroservice.service.impl;
-import com.lelo.ordermicroservice.dto.CartDTO;
+
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -10,8 +10,6 @@ import com.lelo.ordermicroservice.service.OrderItemService;
 import com.lelo.ordermicroservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 @Service
@@ -29,22 +27,27 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void addOrderItem(String customerId) {
         Order order = orderService.addOrder(customerId);
-        List<CartDTO> cartDTOList = new ArrayList<>();
-        Iterable<Cart> cartDTOIterable = cartRepository.getByCustomerId(customerId);
-        Iterator iterator = cartDTOIterable.iterator();
+        Iterable<Cart> cartIterable = cartRepository.getByCustomerId(customerId);
+        Iterator iterator = cartIterable.iterator();
         while(iterator.hasNext()){
             OrderItem orderItem = new OrderItem();
-            CartDTO cartDTO = (CartDTO) iterator.next();
+            Cart cart = (Cart) iterator.next();
             OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
-            orderItemIdentity.setMerchantId(cartDTO.getMerchantId());
-            orderItemIdentity.setProductId(cartDTO.getProductId());
+            orderItemIdentity.setMerchantId(cart.getCartIdentity().getMerchantId());
+            orderItemIdentity.setProductId(cart.getCartIdentity().getProductId());
             orderItem.setOrderItemIdentity(orderItemIdentity);
-            orderItem.setQuantity(cartDTO.getQuantity());
+            orderItem.setQuantity(cart.getQuantity());
             orderItem.setOrder(order);
             orderItemRepository.save(orderItem);
         }
 
 
+    }
+
+    @Override
+    public List<OrderItem> findByOrder(String orderId) {
+        Order order = orderService.getOrder(orderId);
+        return orderItemRepository.findByOrder(order);
     }
 
 //

@@ -34,7 +34,6 @@ public class CartServiceImpl implements CartService {
     public List<Cart> getByCustomerId(String customerId) {
         List<Cart> cartDTOList;
         cartDTOList = cartRepository.getByCustomerId(customerId);
-        System.out.println(cartDTOList);
         Iterator iterator = cartDTOList.iterator();
 //        while (iterator.hasNext()) {
 //            CartDTO cartDTO = (CartDTO) iterator.next();
@@ -56,7 +55,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateQuantity(String customerId, String productId, String merchantId, int quantity) {
-        Cart cart=cartRepository.findByCustomerIdAndProductIdAndMerchantId(customerId,productId,merchantId);
+        CartIdentity cartIdentity = new CartIdentity(customerId, productId, merchantId);
+        Cart cart=cartRepository.findByCartIdentity(cartIdentity);
         cart.setQuantity(quantity);
         cartRepository.save(cart);
     }
