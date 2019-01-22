@@ -1,5 +1,6 @@
 package com.lelo.ordermicroservice.service.impl;
 import com.lelo.ordermicroservice.dto.CartDTO;
+import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
 import com.lelo.ordermicroservice.entity.OrderItemIdentity;
@@ -29,7 +30,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     public void addOrderItem(String customerId) {
         Order order = orderService.addOrder(customerId);
         List<CartDTO> cartDTOList = new ArrayList<>();
-        Iterable<CartDTO> cartDTOIterable = cartRepository.getByCustomerId(customerId);
+        Iterable<Cart> cartDTOIterable = cartRepository.getByCustomerId(customerId);
         Iterator iterator = cartDTOIterable.iterator();
         while(iterator.hasNext()){
             OrderItem orderItem = new OrderItem();
@@ -45,6 +46,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 
     }
+
 //
 //        final String uri = "http://localhost:8080/product/get/" + cartIdentity.getProductId() + "/" + cartIdentity.getMerchantId();
 //        RestTemplate restTemplate = new RestTemplate();

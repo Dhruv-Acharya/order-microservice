@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = Order.TABLE_NAME)
 public class Order {
-    public static final String TABLE_NAME = "ORDER";
+    public static final String TABLE_NAME = "TABLE_ORDER";
     private static final String ID_COLUMN = "ID";
 
     @Id

@@ -6,10 +6,17 @@ import com.lelo.ordermicroservice.entity.CartIdentity;
 import com.lelo.ordermicroservice.repository.CartRepository;
 import com.lelo.ordermicroservice.repository.OrderRepository;
 import com.lelo.ordermicroservice.service.CartService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -24,10 +31,23 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CartDTO> getByCustomerId(String customerId) {
-        List<CartDTO> cartDTOList = cartRepository.getByCustomerId(customerId);
+    public List<Cart> getByCustomerId(String customerId) {
+        List<Cart> cartDTOList;
+        cartDTOList = cartRepository.getByCustomerId(customerId);
+        System.out.println(cartDTOList);
+        Iterator iterator = cartDTOList.iterator();
+//        while (iterator.hasNext()) {
+//            CartDTO cartDTO = (CartDTO) iterator.next();
+////            System.out.println(cartDTO);
+////            System.out.println("---------------------------------------");
+////            System.out.println(iterator.next());
+////            System.out.println("---------------------------------------");
+//            BeanUtils.copyProperties(iterator,cartDTO);
+//            cartDTOList.add(cartDTO);
+//        }
+//        System.out.println(cartDTOList);
         return cartDTOList;
-        }
+    }
 
     @Override
     public void delete(String customerId) {
@@ -36,7 +56,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateQuantity(String customerId, String productId, String merchantId, int quantity) {
-        Cart cart=cartRepository.findByCustomertIdAndProductIdAndMerchantId(customerId,productId,merchantId);
+        Cart cart=cartRepository.findByCustomerIdAndProductIdAndMerchantId(customerId,productId,merchantId);
         cart.setQuantity(quantity);
         cartRepository.save(cart);
     }
@@ -66,7 +86,7 @@ public class CartServiceImpl implements CartService {
 //    }
 
     @Override
-    public void addQuantity(String customerId, String productId, String merchantId, int quantity) {
+    public Cart addQuantity(String customerId, String productId, String merchantId, int quantity) {
         Cart cart=new Cart();
         CartIdentity cartIdentity = new CartIdentity();
         cartIdentity.setCustomerId(customerId);
@@ -75,5 +95,6 @@ public class CartServiceImpl implements CartService {
         cart.setCartIdentity(cartIdentity);
         cart.setQuantity(quantity);
         cartRepository.save(cart);
+        return cart;
    }
 }
