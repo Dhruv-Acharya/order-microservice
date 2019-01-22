@@ -5,7 +5,8 @@ public class ResponseDTO {
     private String RProductDescription;
     private String RProductURL;
     private String RProductName;
-    private double RProductPrice;
+    private double RProductLowestPrice;
+    private double RProductHighestPrice;
     private int RProductQuantity;
     private String RMerchantName;
     private String RMerchantId;
@@ -17,7 +18,8 @@ public class ResponseDTO {
                 ", RProductDescription='" + RProductDescription + '\'' +
                 ", RProductURL='" + RProductURL + '\'' +
                 ", RProductName='" + RProductName + '\'' +
-                ", RProductPrice=" + RProductPrice +
+                ", RProductLowestPrice=" + RProductLowestPrice +
+                ", RProductHighestPrice=" + RProductHighestPrice +
                 ", RProductQuantity=" + RProductQuantity +
                 ", RMerchantName='" + RMerchantName + '\'' +
                 ", RMerchantId='" + RMerchantId + '\'' +
@@ -56,12 +58,20 @@ public class ResponseDTO {
         this.RProductName = RProductName;
     }
 
-    public double getRProductPrice() {
-        return RProductPrice;
+    public double getRProductLowestPrice() {
+        return RProductLowestPrice;
     }
 
-    public void setRProductPrice(double RProductPrice) {
-        this.RProductPrice = RProductPrice;
+    public void setRProductLowestPrice(double RProductLowestPrice) {
+        this.RProductLowestPrice = RProductLowestPrice;
+    }
+
+    public double getRProductHighestPrice() {
+        return RProductHighestPrice;
+    }
+
+    public void setRProductHighestPrice(double RProductHighestPrice) {
+        this.RProductHighestPrice = RProductHighestPrice;
     }
 
     public int getRProductQuantity() {

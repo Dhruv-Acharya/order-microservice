@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface OrderService {
 
+    String getEmailId(String customerId);
+
     Order addOrder(String customerId);
     List<Order> getAll(String customerId);
     Order getOrder(String orderId);

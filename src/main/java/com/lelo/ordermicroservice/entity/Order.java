@@ -3,6 +3,8 @@ package com.lelo.ordermicroservice.entity;/* Made by: mehtakaran9 */
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,19 +21,21 @@ public class Order {
     private String orderId;
 
     private String customerId;
-    private Date date;
+    private String date;
     private double amount;
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 
     public Order() {
     }
+    DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
 
-    public Order(String orderId, List<OrderItem> orderItems, String customerId, Date date, double amount) {
+
+    public Order(String orderId, List<OrderItem> orderItems, String customerId, String date, double amount) {
         this.orderId = orderId;
         this.orderItems = orderItems;
         this.customerId = customerId;
-        this.date = new Date();
+        this.date = dateFormat.format(new Date());
         this.amount = amount;
     }
 
@@ -51,11 +55,11 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

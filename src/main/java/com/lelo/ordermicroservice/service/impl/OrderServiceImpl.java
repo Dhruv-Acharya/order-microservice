@@ -1,7 +1,9 @@
 package com.lelo.ordermicroservice.service.impl;/* Made by: mehtakaran9 */
 
-import com.lelo.ordermicroservice.Utilities.Merchant;
 import com.lelo.ordermicroservice.Utilities.Product;
+import com.lelo.ordermicroservice.dto.CustomerDTO;
+import com.lelo.ordermicroservice.dto.MerchantDTO;
+import com.lelo.ordermicroservice.dto.ProductDTO;
 import com.lelo.ordermicroservice.dto.ResponseDTO;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -13,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 @Service
 public class OrderServiceImpl implements OrderService {
+    DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+
     @Autowired
     private CartRepository cartRepository;
     
@@ -29,10 +34,19 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Override
+    public String getEmailId(String customerId){
+        String customerURI = "https://customer-lelo.herokuapp.com/customer/get/"+customerId;
+        RestTemplate restTemplate = new RestTemplate();
+        String emailIdResult = restTemplate.getForObject(customerURI, String.class);
+        return emailIdResult;
+    }
+
+    @Override
     public Order addOrder(String customerId) {
         Order order = new Order();
         order.setCustomerId(customerId);
-        order.setDate(new Date());
+        String dateOrder = dateFormat.format(new Date());
+        order.setDate(dateOrder);
         return orderRepository.save(order);
     }
 
@@ -61,22 +75,22 @@ public class OrderServiceImpl implements OrderService {
             String productId = orderItem.getOrderItemIdentity().getProductId();
             String merchantURI = "https://merchant-lelo.herokuapp.com/merchant/rating/get/" + merchantId;
             RestTemplate restTemplate = new RestTemplate();
-            Merchant merchantResult = restTemplate.getForObject(merchantURI, Merchant.class);
-            String merchantName = merchantResult.getMerchantName();
+            MerchantDTO merchantResult = restTemplate.getForObject(merchantURI, MerchantDTO.class);
+            String merchantName = merchantResult.getName();
             String ProductURI = "https://product-lelo.herokuapp.com/product/get/"+productId+"/"+merchantId;
-            Product productResult = restTemplate.getForObject(ProductURI, Product.class);
+            ProductDTO productResult = restTemplate.getForObject(ProductURI, ProductDTO.class);
             String productName = productResult.getName();
             String productURL = productResult.getImageUrl();
-            int productQuantity = productResult.getQuantity();
-            double productPrice = productResult.getPrice();
+            double productLowestPrice = productResult.getLowestPrice();
+            double productHighestPrice = productResult.getHighestPrice();
             String productDescription = productResult.getDescription();
             responseDTO.setRMerchantId(merchantId);
             responseDTO.setRMerchantName(merchantName);
             responseDTO.setRProductDescription(productDescription);
             responseDTO.setRProductId(productId);
             responseDTO.setRProductName(productName);
-            responseDTO.setRProductPrice(productPrice);
-            responseDTO.setRProductQuantity(productQuantity);
+            responseDTO.setRProductLowestPrice(productLowestPrice);
+            responseDTO.setRProductHighestPrice(productHighestPrice);
             responseDTO.setRProductURL(productURL);
             responseDTOList.add(responseDTO);
 
