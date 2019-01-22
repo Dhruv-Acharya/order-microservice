@@ -1,5 +1,6 @@
 package com.lelo.ordermicroservice.controller;
 
+import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

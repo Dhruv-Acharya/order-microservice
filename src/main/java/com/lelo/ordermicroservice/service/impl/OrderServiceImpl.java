@@ -4,10 +4,12 @@ import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.repository.CartRepository;
 import com.lelo.ordermicroservice.repository.OrderRepository;
 import com.lelo.ordermicroservice.service.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,5 +25,16 @@ public class OrderServiceImpl implements OrderService {
         order.setCustomerId(customerId);
         order.setDate(new Date());
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getAll(String customerId){
+        List<Order> orderList = orderRepository.getAll(customerId);
+        return orderList;
+    }
+
+    @Override
+    public Order getOrder(String orderId){
+        return orderRepository.findOne(orderId);
     }
 }
