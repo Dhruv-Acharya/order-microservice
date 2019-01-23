@@ -79,7 +79,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void removeItem(CartIdentity cartIdentity) {
+    public void removeItem(String customerId, String merchantId, String productId) {
+        CartIdentity cartIdentity = new CartIdentity(customerId, productId, merchantId);
         Cart cart = cartRepository.findOne(cartIdentity);
         cartRepository.delete(cart);
     }

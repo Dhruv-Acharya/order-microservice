@@ -44,6 +44,13 @@ public class CartController {
     }
 
     @CrossOrigin("*")
+    @RequestMapping(value = "/removeItem/{customerId}/{productId}/{merchantId}", method = RequestMethod.DELETE)
+    public void removeItem(@PathVariable String customerId,@PathVariable String productId,
+                           @PathVariable String merchantId){
+        cartService.removeItem(customerId,productId,merchantId);
+    }
+
+    @CrossOrigin("*")
     @RequestMapping(value = "/update/{customerId}/{productId}/{merchantId}",method = RequestMethod.PUT)
     public ResponseEntity<Boolean> updateQuantity(@PathVariable String customerId,@PathVariable String productId,
                                                  @PathVariable String merchantId, @RequestBody CartDTO cartDTO){
