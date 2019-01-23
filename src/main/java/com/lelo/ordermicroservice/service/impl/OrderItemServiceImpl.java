@@ -1,5 +1,9 @@
 package com.lelo.ordermicroservice.service.impl;
 
+import com.lelo.ordermicroservice.Utilities.Product;
+import com.lelo.ordermicroservice.dto.CustomerDTO;
+import com.lelo.ordermicroservice.dto.ProductDTO;
+import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -10,6 +14,8 @@ import com.lelo.ordermicroservice.service.OrderItemService;
 import com.lelo.ordermicroservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.Iterator;
 import java.util.List;
 @Service
@@ -39,6 +45,11 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItem.setQuantity(cart.getQuantity());
             orderItem.setOrder(order);
             orderItemRepository.save(orderItem);
+            RestTemplate restTemplate = new RestTemplate();
+            ProductMerchantDTO productMerchantDTO = new ProductMerchantDTO();
+            productMerchantDTO.setQuantitySold(orderItem.getQuantity());
+            String URI = "https://product-lelo.herokuapp.com/product/updateQuantity/"+orderItemIdentity.getProductId()+"/"+orderItemIdentity.getMerchantId();
+            restTemplate.put(URI,productMerchantDTO);
         }
     }
 
