@@ -2,6 +2,8 @@ package com.lelo.ordermicroservice.service;
 
 import com.lelo.ordermicroservice.dto.CartResponseDTO;
 import com.lelo.ordermicroservice.entity.Cart;
+import com.lelo.ordermicroservice.entity.CartIdentity;
+
 import java.util.List;
 
 public interface CartService {
@@ -13,5 +15,5 @@ public interface CartService {
     void delete(String customerId);
 
     void updateQuantity(String customerId,String productId, String merchantId, int quantity);
-
+    void removeItem(String customerId,String productId, String merchantId);
 }
