@@ -1,6 +1,7 @@
 package com.lelo.ordermicroservice.service.impl;
 
-import com.lelo.ordermicroservice.dto.CartDTO;
+import com.lelo.ordermicroservice.Utilities.Constans;
+import com.lelo.ordermicroservice.dto.*;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.CartIdentity;
 import com.lelo.ordermicroservice.repository.CartRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -31,26 +33,42 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Cart> getByCustomerId(String customerId) {
+    public List<CartResponseDTO> getByCustomerId(String customerId) {
         List<Cart> cartDTOList;
+        List<CartResponseDTO> responseDTOList = new ArrayList<>();
         cartDTOList = cartRepository.getByCustomerId(customerId);
         Iterator iterator = cartDTOList.iterator();
-//        while (iterator.hasNext()) {
-//            CartDTO cartDTO = (CartDTO) iterator.next();
-////            System.out.println(cartDTO);
-////            System.out.println("---------------------------------------");
-////            System.out.println(iterator.next());
-////            System.out.println("---------------------------------------");
-//            BeanUtils.copyProperties(iterator,cartDTO);
-//            cartDTOList.add(cartDTO);
-//        }
-//        System.out.println(cartDTOList);
-        return cartDTOList;
+        while (iterator.hasNext()) {
+            CartResponseDTO cartResponseDTO = new CartResponseDTO();
+            Cart cartObj = (Cart) iterator.next();
+            String merchantURI = Constans.MERCHANT_MICROSERVICE_BASE_URL + "/merchant/rating/get/" + cartObj.getCartIdentity().getMerchantId();
+            RestTemplate restTemplate = new RestTemplate();
+            MerchantDTO merchantResult = restTemplate.getForObject(merchantURI, MerchantDTO.class);
+
+            cartResponseDTO.setMerchant_id(merchantResult.getMerchantId());
+            cartResponseDTO.setMerchantName(merchantResult.getName());
+            cartResponseDTO.setQuantity(cartObj.getQuantity());
+
+            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + cartObj.getCartIdentity().getProductId();
+            ProductDTO productResult = restTemplate.getForObject(productURI, ProductDTO.class);
+
+            cartResponseDTO.setDescription(productResult.getDescription());
+            cartResponseDTO.setImageUrl(productResult.getImageUrl());
+            cartResponseDTO.setProduct_id(productResult.getProductId());
+
+            String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + cartObj.getCartIdentity().getProductId() + "/" + cartObj.getCartIdentity().getMerchantId();
+            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+
+            cartResponseDTO.setPrice(productMerchantResult.getPrice());
+
+            responseDTOList.add(cartResponseDTO);
+        }
+        return responseDTOList;
     }
 
     @Override
     public void delete(String customerId) {
-        cartRepository.delete(customerId);
+        cartRepository.deleteByCustomerId(customerId);
     }
 
     @Override

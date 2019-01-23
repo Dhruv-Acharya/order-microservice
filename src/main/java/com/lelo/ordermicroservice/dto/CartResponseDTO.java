@@ -1,0 +1,90 @@
+package com.lelo.ordermicroservice.dto;
+
+public class CartResponseDTO {
+    private String name;
+    private double price;
+    private int quantity;
+    private String merchantName;
+    private String imageUrl;
+    private String description;
+    private String product_id;
+    private String merchant_id;
+
+    public CartResponseDTO() {
+    }
+
+    public CartResponseDTO(String name, double price, int quantity, String merchantName, String imageUrl, String description, String product_id, String merchant_id) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.merchantName = merchantName;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.product_id = product_id;
+        this.merchant_id = merchant_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(String product_id) {
+        this.product_id = product_id;
+    }
+
+    public String getMerchant_id() {
+        return merchant_id;
+    }
+
+    public void setMerchant_id(String merchant_id) {
+        this.merchant_id = merchant_id;
+    }
+}
