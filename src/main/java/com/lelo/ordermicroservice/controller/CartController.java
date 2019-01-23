@@ -12,10 +12,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin("*")
 public class CartController {
     @Autowired
     CartService cartService;
 
+    @CrossOrigin("*")
     @RequestMapping(value = "/{customerId}/{productId}/{merchantId}",method = RequestMethod.POST)
     public ResponseEntity<Cart> addQuantity(@PathVariable String customerId, @PathVariable String productId,
                                             @PathVariable String merchantId, @RequestBody CartDTO cartDTO)
@@ -25,7 +27,7 @@ public class CartController {
 
     }
 
-
+    @CrossOrigin("*")
     @RequestMapping(value = "/{customerId}",method = RequestMethod.GET)
     public ResponseEntity<List<Cart>> getByCustomerId(@PathVariable String customerId){
         List<Cart> cartDTOList = cartService.getByCustomerId(customerId);
@@ -33,6 +35,7 @@ public class CartController {
 
     }
 
+    @CrossOrigin("*")
     @RequestMapping(value = "/delete/{customerId}",method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> delete(@PathVariable String customerId ){
 
@@ -40,6 +43,7 @@ public class CartController {
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
 
+    @CrossOrigin("*")
     @RequestMapping(value = "/update/{customerId}/{productId}/{merchantId}",method = RequestMethod.PUT)
     public ResponseEntity<Boolean> updateQuantity(@PathVariable String customerId,@PathVariable String productId,
                                                  @PathVariable String merchantId, @RequestBody CartDTO cartDTO){

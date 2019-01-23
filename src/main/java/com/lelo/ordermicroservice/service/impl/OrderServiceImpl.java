@@ -1,10 +1,9 @@
 package com.lelo.ordermicroservice.service.impl;/* Made by: mehtakaran9 */
 
-import com.lelo.ordermicroservice.Utilities.Product;
-import com.lelo.ordermicroservice.dto.CustomerDTO;
+import com.lelo.ordermicroservice.Utilities.Constans;
 import com.lelo.ordermicroservice.dto.MerchantDTO;
 import com.lelo.ordermicroservice.dto.ProductDTO;
-import com.lelo.ordermicroservice.dto.ResponseDTO;
+import com.lelo.ordermicroservice.dto.OrderItemResponseDTO;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
 import com.lelo.ordermicroservice.repository.CartRepository;
@@ -62,39 +61,56 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Override
-    public List<ResponseDTO> getOrderAll(String orderId){
-        List<ResponseDTO> responseDTOList = new ArrayList<>();
+    public List<OrderItemResponseDTO> getOrderAll(String orderId){
+        List<OrderItemResponseDTO> orderItemResponseDTOList = new ArrayList<>();
         Order order = orderRepository.findOne(orderId);
 
         List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
-        ResponseDTO responseDTO = new ResponseDTO();
+
         for (OrderItem orderItem:
              orderItems) {
-
+            OrderItemResponseDTO orderItemResponseDTO = new OrderItemResponseDTO();
             String merchantId = orderItem.getOrderItemIdentity().getMerchantId();
             String productId = orderItem.getOrderItemIdentity().getProductId();
-            String merchantURI = "https://merchant-lelo.herokuapp.com/merchant/rating/get/" + merchantId;
+            String merchantURI = Constans.MERCHANT_MICROSERVICE_BASE_URL + "/merchant/rating/get/" + merchantId;
             RestTemplate restTemplate = new RestTemplate();
             MerchantDTO merchantResult = restTemplate.getForObject(merchantURI, MerchantDTO.class);
-            String merchantName = merchantResult.getName();
-            String ProductURI = "https://product-lelo.herokuapp.com/product/get/"+productId+"/"+merchantId;
-            ProductDTO productResult = restTemplate.getForObject(ProductURI, ProductDTO.class);
-            String productName = productResult.getName();
-            String productURL = productResult.getImageUrl();
-            double productLowestPrice = productResult.getLowestPrice();
-            double productHighestPrice = productResult.getHighestPrice();
-            String productDescription = productResult.getDescription();
-            responseDTO.setRMerchantId(merchantId);
-            responseDTO.setRMerchantName(merchantName);
-            responseDTO.setRProductDescription(productDescription);
-            responseDTO.setRProductId(productId);
-            responseDTO.setRProductName(productName);
-            responseDTO.setRProductLowestPrice(productLowestPrice);
-            responseDTO.setRProductHighestPrice(productHighestPrice);
-            responseDTO.setRProductURL(productURL);
-            responseDTOList.add(responseDTO);
+
+            orderItemResponseDTO.setMerchantId(merchantResult.getMerchantId());
+            orderItemResponseDTO.setMerchantName(merchantResult.getName());
+
+            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+productId;
+            ProductDTO productResult = restTemplate.getForObject(productURI, ProductDTO.class);
+
+            orderItemResponseDTO.setProductDescription(productResult.getDescription());
+            orderItemResponseDTO.setProductId(productResult.getProductId());
+            orderItemResponseDTO.setProductImageUrl(productResult.getImageUrl());
+            orderItemResponseDTO.setProductName(productResult.getName());
+
+            String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + productId + "/" + merchantId;
+
+//            orderItemResponseDTO.setProductPrice(productResult.get);
+//            String merchantId = orderItem.getOrderItemIdentity().getMerchantId();
+//            String productId = orderItem.getOrderItemIdentity().getProductId();
+//            String merchantURI = "https://merchant-lelo.herokuapp.com/merchant/rating/get/" + merchantId;
+//            RestTemplate restTemplate = new RestTemplate();
+//            MerchantDTO merchantResult = restTemplate.getForObject(merchantURI, MerchantDTO.class);
+//            String merchantName = merchantResult.getName();
+//            String productMerchantURI = "https://product-lelo.herokuapp.com/product/get/"+productId+"/"+merchantId;
+//            ProductDTO productResult = restTemplate.getForObject(productMerchantURI, ProductDTO.class);
+//            String productName = productResult.getName();
+//            String productImageURL = productResult.getImageUrl();
+//
+//            String productDescription = productResult.getDescription();
+//            orderItemResponseDTO.setRMerchantId(merchantId);
+//            orderItemResponseDTO.setRMerchantName(merchantName);
+//            orderItemResponseDTO.setRProductDescription(productDescription);
+//            orderItemResponseDTO.setRProductId(productId);
+//            orderItemResponseDTO.setRProductName(productName);
+//            orderItemResponseDTO.setRProductURL(productImageURL);
+//            orderItemResponseDTOList.add(orderItemResponseDTO);
 
         }
-        return responseDTOList;
+        return orderItemResponseDTOList;
     }
 }
