@@ -54,10 +54,11 @@ public class CartServiceImpl implements CartService {
 
             cartResponseDTO.setDescription(productResult.getDescription());
             cartResponseDTO.setImageUrl(productResult.getImageUrl());
+            cartResponseDTO.setName(productResult.getName());
             cartResponseDTO.setProduct_id(productResult.getProductId());
 
             String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + cartObj.getCartIdentity().getProductId() + "/" + cartObj.getCartIdentity().getMerchantId();
-            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productMerchantURI, ProductMerchantDTO.class);
 
             cartResponseDTO.setPrice(productMerchantResult.getPrice());
 
