@@ -1,10 +1,7 @@
 package com.lelo.ordermicroservice.service.impl;/* Made by: mehtakaran9 */
 
 import com.lelo.ordermicroservice.Utilities.Constans;
-import com.lelo.ordermicroservice.dto.MerchantDTO;
-import com.lelo.ordermicroservice.dto.ProductDTO;
-import com.lelo.ordermicroservice.dto.OrderItemResponseDTO;
-import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
+import com.lelo.ordermicroservice.dto.*;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -55,29 +52,29 @@ public class OrderServiceImpl implements OrderService {
         order.setDate(new Date());
         Order createOrder = orderRepository.save(order);
         double totalAmount = 0;
-//        List<Cart> cartItems = cartService.getByCustomerId(customerId);
-//        for (Cart cartItem :
-//                cartItems) {
-//            OrderItem orderItem = new OrderItem();
-//            orderItem.setOrder(order);
-//            orderItem.setQuantity(cartItem.getQuantity());
-//            OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
-//            orderItemIdentity.setMerchantId(cartItem.getCartIdentity().getMerchantId());
-//            orderItemIdentity.setProductId(cartItem.getCartIdentity().getProductId());
-//            orderItem.setOrderItemIdentity(orderItemIdentity);
-//            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
-//            RestTemplate restTemplate = new RestTemplate();
-//            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
-//            totalAmount += productResult.getPrice() * cartItem.getQuantity();
-//            orderItem.setPrice(productResult.getPrice());
-//            orderItemRepository.save(orderItem);
+        List<CartResponseDTO> cartItems = cartService.getByCustomerId(customerId);
+        for (CartResponseDTO cartItem :
+                cartItems) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setQuantity(cartItem.getQuantity());
+            OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
+            orderItemIdentity.setMerchantId(cartItem.getMerchant_id());
+            orderItemIdentity.setProductId(cartItem.getProduct_id());
+            orderItem.setOrderItemIdentity(orderItemIdentity);
+            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getProduct_id() + "/" + cartItem.getMerchant_id();
+            RestTemplate restTemplate = new RestTemplate();
+            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+            totalAmount += productResult.getPrice() * cartItem.getQuantity();
+            orderItem.setPrice(productResult.getPrice());
+            orderItemRepository.save(orderItem);
 //
 //            String productQuantityURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
 ////            RestTemplate restTemplate = new RestTemplate();
 ////            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
-//        }
-//        cartService.delete(customerId);
-//        order.setAmount(totalAmount);
+        }
+        cartService.delete(customerId);
+        order.setAmount(totalAmount);
         return order;
     }
 
