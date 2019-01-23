@@ -4,11 +4,15 @@ import com.lelo.ordermicroservice.Utilities.Constans;
 import com.lelo.ordermicroservice.dto.MerchantDTO;
 import com.lelo.ordermicroservice.dto.ProductDTO;
 import com.lelo.ordermicroservice.dto.OrderItemResponseDTO;
+import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
+import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
+import com.lelo.ordermicroservice.entity.OrderItemIdentity;
 import com.lelo.ordermicroservice.repository.CartRepository;
 import com.lelo.ordermicroservice.repository.OrderItemRepository;
 import com.lelo.ordermicroservice.repository.OrderRepository;
+import com.lelo.ordermicroservice.service.CartService;
 import com.lelo.ordermicroservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    CartService cartService;
     
     @Autowired
     private OrderItemRepository orderItemRepository;
@@ -44,9 +51,34 @@ public class OrderServiceImpl implements OrderService {
     public Order addOrder(String customerId) {
         Order order = new Order();
         order.setCustomerId(customerId);
-        String dateOrder = dateFormat.format(new Date());
-        order.setDate(dateOrder);
-        return orderRepository.save(order);
+//        String dateOrder = dateFormat.format(new Date());
+        order.setDate(new Date());
+        Order createOrder = orderRepository.save(order);
+        double totalAmount = 0;
+//        List<Cart> cartItems = cartService.getByCustomerId(customerId);
+//        for (Cart cartItem :
+//                cartItems) {
+//            OrderItem orderItem = new OrderItem();
+//            orderItem.setOrder(order);
+//            orderItem.setQuantity(cartItem.getQuantity());
+//            OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
+//            orderItemIdentity.setMerchantId(cartItem.getCartIdentity().getMerchantId());
+//            orderItemIdentity.setProductId(cartItem.getCartIdentity().getProductId());
+//            orderItem.setOrderItemIdentity(orderItemIdentity);
+//            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
+//            RestTemplate restTemplate = new RestTemplate();
+//            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+//            totalAmount += productResult.getPrice() * cartItem.getQuantity();
+//            orderItem.setPrice(productResult.getPrice());
+//            orderItemRepository.save(orderItem);
+//
+//            String productQuantityURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
+////            RestTemplate restTemplate = new RestTemplate();
+////            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+//        }
+//        cartService.delete(customerId);
+//        order.setAmount(totalAmount);
+        return order;
     }
 
     @Override
@@ -87,7 +119,11 @@ public class OrderServiceImpl implements OrderService {
             orderItemResponseDTO.setProductImageUrl(productResult.getImageUrl());
             orderItemResponseDTO.setProductName(productResult.getName());
 
-            String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + productId + "/" + merchantId;
+//            String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + productId + "/" + merchantId;
+//            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productMerchantURI, ProductMerchantDTO.class);
+
+            orderItemResponseDTO.setProductPrice(orderItem.getPrice());
+            orderItemResponseDTO.setProductQuantity(orderItem.getQuantity());
 
 //            orderItemResponseDTO.setProductPrice(productResult.get);
 //            String merchantId = orderItem.getOrderItemIdentity().getMerchantId();
@@ -108,7 +144,8 @@ public class OrderServiceImpl implements OrderService {
 //            orderItemResponseDTO.setRProductId(productId);
 //            orderItemResponseDTO.setRProductName(productName);
 //            orderItemResponseDTO.setRProductURL(productImageURL);
-//            orderItemResponseDTOList.add(orderItemResponseDTO);
+            System.out.println(orderItemResponseDTO);
+            orderItemResponseDTOList.add(orderItemResponseDTO);
 
         }
         return orderItemResponseDTOList;

@@ -1,6 +1,7 @@
 package com.lelo.ordermicroservice.controller;
 
 import com.lelo.ordermicroservice.dto.CartDTO;
+import com.lelo.ordermicroservice.dto.CartResponseDTO;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +30,15 @@ public class CartController {
 
     @CrossOrigin("*")
     @RequestMapping(value = "/{customerId}",method = RequestMethod.GET)
-    public ResponseEntity<List<Cart>> getByCustomerId(@PathVariable String customerId){
-        List<Cart> cartDTOList = cartService.getByCustomerId(customerId);
-        return new ResponseEntity<>(cartDTOList, HttpStatus.OK);
+    public ResponseEntity<List<CartResponseDTO>> getByCustomerId(@PathVariable String customerId){
+        List<CartResponseDTO> cartDTOList = cartService.getByCustomerId(customerId);
+        return new ResponseEntity<List<CartResponseDTO>>(cartDTOList, HttpStatus.OK);
 
     }
 
     @CrossOrigin("*")
     @RequestMapping(value = "/delete/{customerId}",method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> delete(@PathVariable String customerId ){
-
         cartService.delete(customerId);
         return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
     }
