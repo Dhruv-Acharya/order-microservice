@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @CrossOrigin("*")
-    @RequestMapping(value = "/getOrderAll{orderId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrderAll/{orderId}", method = RequestMethod.GET)
     private List<OrderItemResponseDTO> getOrderAll(@PathVariable String orderId) {
         return orderService.getOrderAll(orderId);
     }
