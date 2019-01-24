@@ -75,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
         }
         cartService.delete(customerId);
         order.setAmount(totalAmount);
+        orderRepository.save(order);
         return order;
     }
 
