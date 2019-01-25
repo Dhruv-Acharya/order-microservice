@@ -40,8 +40,8 @@ public class OrderServiceImpl implements OrderService {
     public String getEmailId(String customerId){
         String customerURI = "https://customer-lelo.herokuapp.com/customer/get/"+customerId;
         RestTemplate restTemplate = new RestTemplate();
-        String emailIdResult = restTemplate.getForObject(customerURI, String.class);
-        return emailIdResult;
+        CustomerDTO customerResult = restTemplate.getForObject(customerURI, CustomerDTO.class);
+        return customerResult.getCustomerId();
     }
 
     @Override
