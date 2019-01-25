@@ -1,4 +1,4 @@
-package com.lelo.ordermicroservice.swagger;/* Made by: mehtakaran9 */
+package com.lelo.ordermicroservice.Utilities;/* Made by: mehtakaran9 */
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

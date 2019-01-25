@@ -1,22 +1,20 @@
 package com.lelo.ordermicroservice.service.impl;
 
 import com.lelo.ordermicroservice.Utilities.Constans;
-import com.lelo.ordermicroservice.dto.*;
+import com.lelo.ordermicroservice.dto.CartResponseDTO;
+import com.lelo.ordermicroservice.dto.MerchantDTO;
+import com.lelo.ordermicroservice.dto.ProductDTO;
+import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.CartIdentity;
 import com.lelo.ordermicroservice.repository.CartRepository;
 import com.lelo.ordermicroservice.repository.OrderRepository;
 import com.lelo.ordermicroservice.service.CartService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,10 +52,11 @@ public class CartServiceImpl implements CartService {
 
             cartResponseDTO.setDescription(productResult.getDescription());
             cartResponseDTO.setImageUrl(productResult.getImageUrl());
+            cartResponseDTO.setName(productResult.getName());
             cartResponseDTO.setProduct_id(productResult.getProductId());
 
             String productMerchantURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/" + cartObj.getCartIdentity().getProductId() + "/" + cartObj.getCartIdentity().getMerchantId();
-            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+            ProductMerchantDTO productMerchantResult = restTemplate.getForObject(productMerchantURI, ProductMerchantDTO.class);
 
             cartResponseDTO.setPrice(productMerchantResult.getPrice());
 
@@ -74,9 +73,19 @@ public class CartServiceImpl implements CartService {
     @Override
     public void updateQuantity(String customerId, String productId, String merchantId, int quantity) {
         CartIdentity cartIdentity = new CartIdentity(customerId, productId, merchantId);
-        Cart cart=cartRepository.findByCartIdentity(cartIdentity);
+        Cart cart=cartRepository.findOne(cartIdentity);
         cart.setQuantity(quantity);
         cartRepository.save(cart);
+    }
+
+    @Override
+    public void removeItem(String customerId, String productId, String merchantId) {
+        CartIdentity cartIdentity = new CartIdentity();
+        cartIdentity.setCustomerId(customerId);
+        cartIdentity.setMerchantId(merchantId);
+        cartIdentity.setProductId(productId);
+        Cart cart = cartRepository.findOne(cartIdentity);
+        cartRepository.delete(cart);
     }
 
 //    @Override

@@ -1,10 +1,7 @@
 package com.lelo.ordermicroservice.service.impl;/* Made by: mehtakaran9 */
 
 import com.lelo.ordermicroservice.Utilities.Constans;
-import com.lelo.ordermicroservice.dto.MerchantDTO;
-import com.lelo.ordermicroservice.dto.ProductDTO;
-import com.lelo.ordermicroservice.dto.OrderItemResponseDTO;
-import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
+import com.lelo.ordermicroservice.dto.*;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -43,43 +40,52 @@ public class OrderServiceImpl implements OrderService {
     public String getEmailId(String customerId){
         String customerURI = "https://customer-lelo.herokuapp.com/customer/get/"+customerId;
         RestTemplate restTemplate = new RestTemplate();
-        String emailIdResult = restTemplate.getForObject(customerURI, String.class);
-        return emailIdResult;
+        CustomerDTO customerResult = restTemplate.getForObject(customerURI, CustomerDTO.class);
+        return customerResult.getCustomerId();
     }
 
     @Override
-    public Order addOrder(String customerId) {
+    public Order addOrder(String customerId, String addressId) {
         Order order = new Order();
         order.setCustomerId(customerId);
-//        String dateOrder = dateFormat.format(new Date());
+        order.setAddressId(addressId);
         order.setDate(new Date());
+
         Order createOrder = orderRepository.save(order);
         double totalAmount = 0;
-//        List<Cart> cartItems = cartService.getByCustomerId(customerId);
-//        for (Cart cartItem :
-//                cartItems) {
-//            OrderItem orderItem = new OrderItem();
-//            orderItem.setOrder(order);
-//            orderItem.setQuantity(cartItem.getQuantity());
-//            OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
-//            orderItemIdentity.setMerchantId(cartItem.getCartIdentity().getMerchantId());
-//            orderItemIdentity.setProductId(cartItem.getCartIdentity().getProductId());
-//            orderItem.setOrderItemIdentity(orderItemIdentity);
-//            String productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
-//            RestTemplate restTemplate = new RestTemplate();
-//            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
-//            totalAmount += productResult.getPrice() * cartItem.getQuantity();
-//            orderItem.setPrice(productResult.getPrice());
-//            orderItemRepository.save(orderItem);
-//
-//            String productQuantityURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getCartIdentity().getProductId() + "/" + cartItem.getCartIdentity().getMerchantId();
-////            RestTemplate restTemplate = new RestTemplate();
-////            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
-//        }
-//        cartService.delete(customerId);
-//        order.setAmount(totalAmount);
+        List<CartResponseDTO> cartItems = cartService.getByCustomerId(customerId);
+        RestTemplate restTemplate = new RestTemplate();
+        String productURI;
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartResponseDTO cartItem :
+                cartItems) {
+            productURI = Constans.PRODUCT_MICROSERVICE_BASE_URL + "/product/get/"+cartItem.getProduct_id() + "/" + cartItem.getMerchant_id();
+            ProductMerchantDTO productResult = restTemplate.getForObject(productURI, ProductMerchantDTO.class);
+            if(productResult != null) {
+                OrderItem orderItem = new OrderItem();
+                OrderItemIdentity orderItemIdentity = new OrderItemIdentity();
+                orderItemIdentity.setMerchantId(cartItem.getMerchant_id());
+                orderItemIdentity.setProductId(cartItem.getProduct_id());
+                orderItemIdentity.setOrderId(createOrder.getOrderId());
+                orderItem.setOrderItemIdentity(orderItemIdentity);
+                totalAmount += productResult.getPrice() * cartItem.getQuantity();
+                orderItem.setPrice(productResult.getPrice());
+                orderItem.setQuantity(cartItem.getQuantity());
+                orderItems.add(orderItem);
+
+//                String URI = “https://product-lelo.herokuapp.com/product/updateQuantity/“+orderItemIdentity.getProductId()+“/”+orderItemIdentity.getMerchantId();
+//                restTemplate.put(URI,productMerchantDTO);
+            }
+            createOrder.setOrderItems(orderItems);
+            order.setAmount(totalAmount);
+            cartService.delete(customerId);
+            orderItemRepository.save(orderItems);
+            orderRepository.save(createOrder);
+        }
         return order;
     }
+
+
 
     @Override
     public List<Order> getAll(String customerId){

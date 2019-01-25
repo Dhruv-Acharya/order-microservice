@@ -48,4 +48,6 @@ public class CartIdentity implements Serializable {
     public void setMerchantId(String merchantId) {
         this.merchantId = merchantId;
     }
+
+
 }

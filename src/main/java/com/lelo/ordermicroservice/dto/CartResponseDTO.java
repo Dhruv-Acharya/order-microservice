@@ -10,19 +10,6 @@ public class CartResponseDTO {
     private String product_id;
     private String merchant_id;
 
-    public CartResponseDTO() {
-    }
-
-    public CartResponseDTO(String name, double price, int quantity, String merchantName, String imageUrl, String description, String product_id, String merchant_id) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.merchantName = merchantName;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.product_id = product_id;
-        this.merchant_id = merchant_id;
-    }
 
     public String getName() {
         return name;

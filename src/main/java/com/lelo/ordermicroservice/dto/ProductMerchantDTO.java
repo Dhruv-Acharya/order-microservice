@@ -87,4 +87,18 @@ public class ProductMerchantDTO {
     public void setRatingCounter(double ratingCounter) {
         this.ratingCounter = ratingCounter;
     }
+
+    @Override
+    public String toString() {
+        return "ProductMerchantDTO{" +
+                "productId='" + productId + '\'' +
+                ", merchantId='" + merchantId + '\'' +
+                ", price=" + price +
+                ", quantityOffered=" + quantityOffered +
+                ", quantitySold=" + quantitySold +
+                ", discount=" + discount +
+                ", rating=" + rating +
+                ", ratingCounter=" + ratingCounter +
+                '}';
+    }
 }

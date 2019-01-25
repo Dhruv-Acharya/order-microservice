@@ -9,7 +9,7 @@ public interface OrderService {
 
     String getEmailId(String customerId);
 
-    Order addOrder(String customerId);
+    Order addOrder(String customerId, String addressId);
     List<Order> getAll(String customerId);
     Order getOrder(String orderId);
 

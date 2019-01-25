@@ -1,5 +1,6 @@
 package com.lelo.ordermicroservice.service.impl;
 
+import com.lelo.ordermicroservice.dto.ProductMerchantDTO;
 import com.lelo.ordermicroservice.entity.Cart;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.entity.OrderItem;
@@ -10,6 +11,8 @@ import com.lelo.ordermicroservice.service.OrderItemService;
 import com.lelo.ordermicroservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.Iterator;
 import java.util.List;
 @Service
@@ -26,7 +29,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public void addOrderItem(String customerId) {
-        Order order = orderService.addOrder(customerId);
+//        Order order = orderService.addOrder(customerId);
         Iterable<Cart> cartIterable = cartRepository.getByCustomerId(customerId);
         Iterator iterator = cartIterable.iterator();
         while(iterator.hasNext()){
@@ -37,8 +40,13 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItemIdentity.setProductId(cart.getCartIdentity().getProductId());
             orderItem.setOrderItemIdentity(orderItemIdentity);
             orderItem.setQuantity(cart.getQuantity());
-            orderItem.setOrder(order);
+//            orderItem.setO(order);
             orderItemRepository.save(orderItem);
+            RestTemplate restTemplate = new RestTemplate();
+            ProductMerchantDTO productMerchantDTO = new ProductMerchantDTO();
+            productMerchantDTO.setQuantitySold(orderItem.getQuantity());
+            String URI = "https://product-lelo.herokuapp.com/product/updateQuantity/"+orderItemIdentity.getProductId()+"/"+orderItemIdentity.getMerchantId();
+            restTemplate.put(URI,productMerchantDTO);
         }
     }
 
