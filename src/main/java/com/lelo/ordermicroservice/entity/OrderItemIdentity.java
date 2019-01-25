@@ -1,5 +1,6 @@
 package com.lelo.ordermicroservice.entity;/* Made by: mehtakaran9 */
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,22 +11,15 @@ public class OrderItemIdentity implements Serializable {
     private String productId;
     @NotNull
     private String merchantId;
+    @Column(name = "order_id", nullable = false, updatable = false)
+    private String orderId;
 
-    public OrderItemIdentity() {
-
+    public String getOrderId() {
+        return orderId;
     }
 
-    public OrderItemIdentity(String productId, String merchantId) {
-        this.productId = productId;
-        this.merchantId = merchantId;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItemIdentity{" +
-                "productId='" + productId + '\'' +
-                ", merchantId='" + merchantId + '\'' +
-                '}';
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getProductId() {

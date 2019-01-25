@@ -1,4 +1,4 @@
-package com.lelo.ordermicroservice.JavaEmail;/* Made by: mehtakaran9 */
+package com.lelo.ordermicroservice.Utilities;/* Made by: mehtakaran9 */
 
 import java.util.Properties;
 
