@@ -72,6 +72,9 @@ public class OrderServiceImpl implements OrderService {
                 orderItem.setPrice(productResult.getPrice());
                 orderItem.setQuantity(cartItem.getQuantity());
                 orderItems.add(orderItem);
+
+//                String URI = “https://product-lelo.herokuapp.com/product/updateQuantity/“+orderItemIdentity.getProductId()+“/”+orderItemIdentity.getMerchantId();
+//                restTemplate.put(URI,productMerchantDTO);
             }
             createOrder.setOrderItems(orderItems);
             order.setAmount(totalAmount);
