@@ -1,6 +1,6 @@
 package com.lelo.ordermicroservice.controller;/* Made by: mehtakaran9 */
 
-import com.lelo.ordermicroservice.JavaEmail.*;
+import com.lelo.ordermicroservice.Utilities.JavaEmail;
 import com.lelo.ordermicroservice.dto.OrderItemResponseDTO;
 import com.lelo.ordermicroservice.entity.Order;
 import com.lelo.ordermicroservice.service.OrderService;
@@ -14,15 +14,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
-@CrossOrigin("*")
 public class OrderController {
     @Autowired
     OrderService orderService;
 
     @CrossOrigin("*")
-    @RequestMapping(value = "/addOrder/{customerId}", method = RequestMethod.POST)
-    private ResponseEntity<Order> addOrder(@PathVariable String customerId) throws MessagingException {
-        Order order = orderService.addOrder(customerId);
+    @RequestMapping(value = "/addOrder/{customerId}/{addressId}", method = RequestMethod.POST)
+    private ResponseEntity<Order> addOrder(@PathVariable String customerId, @PathVariable String addressId) throws MessagingException {
+        Order order = orderService.addOrder(customerId, addressId);
         JavaEmail javaEmail = new JavaEmail();
         String emailIdResult = orderService.getEmailId(customerId);
         javaEmail.JavaEmail(emailIdResult, "Order Placed: <br>Order ID is: " +
@@ -36,12 +35,6 @@ public class OrderController {
     private ResponseEntity<List<Order>> getAll(@PathVariable String customerId){
         List<Order> orderList = orderService.getAll(customerId);
         return new ResponseEntity<>(orderList, HttpStatus.ACCEPTED);
-    }
-
-    @CrossOrigin("*")
-    @RequestMapping(value = "/get/{orderId}", method = RequestMethod.GET)
-    private Order getOrder(@PathVariable String orderId){
-        return orderService.getOrder(orderId);
     }
 
     @CrossOrigin("*")

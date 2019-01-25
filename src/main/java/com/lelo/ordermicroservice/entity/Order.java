@@ -21,27 +21,21 @@ public class Order {
     @Column(name = Order.ID_COLUMN)
     private String orderId;
 
+    @Column(name = "customer_id")
     private String customerId;
+
     @Column(name = "order_date")
     private Date date;
+
+    @Column(name = "amount")
     private double amount;
+
+    @Column(name = "address_id")
+    private String addressId;
+
     @JsonBackReference
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
-
-    public Order() {
-    }
-//    DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
-
-
-    public Order(String orderId, List<OrderItem> orderItems, String customerId, Date date, double amount) {
-        this.orderId = orderId;
-        this.orderItems = orderItems;
-        this.customerId = customerId;
-//        this.date = dateFormat.format(new Date());
-        this.date = date;
-        this.amount = amount;
-    }
 
     public String getOrderId() {
         return orderId;
@@ -81,6 +75,14 @@ public class Order {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
     }
 
     @Override
