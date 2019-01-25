@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
         String customerURI = "https://customer-lelo.herokuapp.com/customer/get/"+customerId;
         RestTemplate restTemplate = new RestTemplate();
         CustomerDTO customerResult = restTemplate.getForObject(customerURI, CustomerDTO.class);
-        return customerResult.getCustomerId();
+        return customerResult.getEmail();
     }
 
     @Override
